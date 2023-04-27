@@ -15,21 +15,17 @@ router.get("/:key", async function (req, res, next) {
 });
 
 router.post("/", async function (req, res, next) {
-  const { email, firstName, lastName, age } = req.body;
+  const { randomText } = req.body;
   await text.set(email, {
-    firstName: firstName,
-    secondName: lastName,
-    age: age,
+    text: randomText,
   });
   res.end();
 });
 
 router.put("/", async function (req, res, next) {
-  const { email, firstName, lastName, age } = req.body;
+  const { randomText } = req.body;
   await text.set(email, {
-    firstName: firstName,
-    secondName: lastName,
-    age: age,
+    text: randomText,
   });
   res.end();
 });
