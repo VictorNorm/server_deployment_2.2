@@ -2,37 +2,31 @@ var express = require("express");
 var router = express.Router();
 const CyclicDB = require("@cyclic.sh/dynamodb");
 const db = CyclicDB(process.env.CYCLIC_DB);
-let text = db.collection("text");
-
+let contentCollection = db.collection("content");
+/* GET home page. */
 router.get("/", async function (req, res, next) {
-  let list = await text.list();
-  res.send(list);
+  let content = await contentCollection.get("content");
+  if (content == null) {
+    res.json({
+      status: "fail",
+    });
+  } else {
+    contentValue = content.props.value;
+    console.log(contentValue);
+    res.json({
+      status: "success",
+      content: contentValue,
+    });
+  }
 });
-
-router.get("/:key", async function (req, res, next) {
-  let item = await text.get(req.params.key);
-  res.send(item);
-});
-
 router.post("/", async function (req, res, next) {
-  const { randomText } = req.body;
-  await text.set(email, {
-    text: randomText,
+  const { content } = req.body;
+  await contentCollection.set("content", {
+    value: content,
   });
-  res.end();
-});
-
-router.put("/", async function (req, res, next) {
-  const { randomText } = req.body;
-  await text.set(email, {
-    text: randomText,
+  res.json({
+    status: "success",
+    content: content,
   });
-  res.end();
 });
-
-router.delete("/:key", async function (req, res, next) {
-  await text.delete(req.params.key);
-  res.end();
-});
-
 module.exports = router;
